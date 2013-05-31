@@ -2,6 +2,8 @@
 	jQuery Colorbox v1.4.18 - 2013-05-30
 	(c) 2013 Jack Moore - jacklmoore.com/colorbox
 	license: http://www.opensource.org/licenses/mit-license.php
+
+	+ minWidth&minHeight support
 */
 (function ($, document, window) {
 	var
@@ -15,10 +17,12 @@
 		initialWidth: "600",
 		innerWidth: false,
 		maxWidth: false,
+		minWidth:false,
 		height: false,
 		initialHeight: "450",
 		innerHeight: false,
 		maxHeight: false,
+		minHeight:false,
 		scalePhotos: true,
 		scrolling: true,
 		inline: false,
@@ -698,11 +702,13 @@
 		
 		function getWidth() {
 			settings.w = settings.w || $loaded.width();
+			settings.w = settings.minw && settings.minw > settings.w ? settings.minw : settings.w;
 			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
 			return settings.w;
 		}
 		function getHeight() {
 			settings.h = settings.h || $loaded.height();
+			settings.h = settings.minh && settings.minh > settings.h ? settings.minh : settings.h;
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			return settings.h;
 		}
@@ -865,6 +871,8 @@
 		// Sets the minimum dimensions for use in image scaling
 		settings.mw = settings.w;
 		settings.mh = settings.h;
+		settings.minw = settings.w;
+		settings.minh = settings.h;
 		
 		// Re-evaluate the minimum width and height based on maxWidth and maxHeight values.
 		// If the width or height exceed the maxWidth or maxHeight, use the maximum values instead.
@@ -872,9 +880,17 @@
 			settings.mw = setSize(settings.maxWidth, 'x') - loadedWidth - interfaceWidth;
 			settings.mw = settings.w && settings.w < settings.mw ? settings.w : settings.mw;
 		}
+		if(settings.minWidth){
+			settings.minw = setSize(settings.minWidth, 'x') - loadedWidth - interfaceWidth;
+			settings.minw = settings.w && settings.w > settings.minw ? settings.w : settings.minw;
+		}
 		if (settings.maxHeight) {
 			settings.mh = setSize(settings.maxHeight, 'y') - loadedHeight - interfaceHeight;
 			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
+		}
+		if(settings.minHeight){
+			settings.minh = setSize(settings.minHeight, 'y') - loadedHeight - interfaceHeight;
+			settings.minh = settings.h && settings.h > settings.minh ? settings.h : settings.minh;
 		}
 		
 		href = settings.href;
